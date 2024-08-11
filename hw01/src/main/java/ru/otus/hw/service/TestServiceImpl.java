@@ -20,7 +20,6 @@ public class TestServiceImpl implements TestService {
         ioService.printFormattedLine("Please answer the questions below%n");
         List<Question> questionList = questionDao.findAll();
         printQuestions(questionList);
-        // Получить вопросы из дао и вывести их с вариантами ответов
     }
 
     private void printQuestions(List<Question> questionList) {
