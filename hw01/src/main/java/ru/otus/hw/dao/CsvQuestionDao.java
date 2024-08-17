@@ -34,7 +34,7 @@ public class CsvQuestionDao implements QuestionDao {
                     .parse();
             return questionDtoList.stream().map(QuestionDto::toDomainObject).toList();
         } catch (IOException e) {
-            throw new QuestionReadException("Error: ", e);
+            throw new QuestionReadException("File reading error: ", e);
         }
     }
 }
