@@ -1,3 +1,5 @@
+package ru.otus.hw.dao;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw.config.TestFileNameProvider;
@@ -43,10 +45,8 @@ public class CsvQuestionDaoTest {
 
         given(testFileNameProvider.getTestFileName()).willReturn("nonexistent_questions.csv");
 
-        var expected = assertThrows(QuestionReadException.class, () -> {
-            csvQuestionDao.findAll();
-        });
-        String expectedMessage = "File is empty!";
+        var expected = assertThrows(QuestionReadException.class, () -> csvQuestionDao.findAll());
+        String expectedMessage = "File reading error: ";
 
         assertEquals(expectedMessage, expected.getMessage());
     }

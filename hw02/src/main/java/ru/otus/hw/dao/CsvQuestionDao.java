@@ -21,13 +21,10 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName())) {
-            if (is == null) {
-                throw new QuestionReadException("File is empty!");
-            }
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
+             InputStreamReader inputStreamReader = new InputStreamReader(is);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
 
-            InputStreamReader inputStreamReader = new InputStreamReader(is);
-            BufferedReader reader = new BufferedReader(inputStreamReader);
             List<QuestionDto> questionDtoList = new CsvToBeanBuilder<QuestionDto>(reader)
                     .withSeparator(';')
                     .withSkipLines(1)
@@ -35,7 +32,7 @@ public class CsvQuestionDao implements QuestionDao {
                     .build()
                     .parse();
             return questionDtoList.stream().map(QuestionDto::toDomainObject).toList();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new QuestionReadException("File reading error: ", e);
         }
     }

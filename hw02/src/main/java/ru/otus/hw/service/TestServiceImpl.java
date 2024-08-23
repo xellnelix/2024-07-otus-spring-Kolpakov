@@ -9,6 +9,7 @@ import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class TestServiceImpl implements TestService {
 
     private boolean checkCorrectAnswer(List<Answer> answerList, String studentAnswer) {
         for (var answer : answerList) {
-            if (studentAnswer != null && studentAnswer.equals(answer.text()) && answer.isCorrect()) {
+            if (Objects.equals(studentAnswer, answer.text()) && answer.isCorrect()) {
                 return true;
             }
         }
