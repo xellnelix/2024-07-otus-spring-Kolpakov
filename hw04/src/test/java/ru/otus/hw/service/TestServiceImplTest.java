@@ -2,6 +2,7 @@ package ru.otus.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-
+@SpringBootTest(properties = {"spring.shell.interactive.enabled=false", "spring.shell.history.enabled=false"})
 public class TestServiceImplTest {
     private TestServiceImpl testService;
     private QuestionDao questionDao;

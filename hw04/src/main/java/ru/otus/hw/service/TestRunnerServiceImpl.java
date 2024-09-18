@@ -1,13 +1,11 @@
 package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TestRunnerServiceImpl implements TestRunnerService, ApplicationRunner {
+public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final TestService testService;
 
@@ -20,10 +18,5 @@ public class TestRunnerServiceImpl implements TestRunnerService, ApplicationRunn
         var student = studentService.determineCurrentStudent();
         var testResult = testService.executeTestFor(student);
         resultService.showResult(testResult);
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        run();
     }
 }
