@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-@SpringBootTest(properties = {"spring.shell.interactive.enabled=false", "spring.shell.history.enabled=false"})
+@SpringBootTest
 public class TestServiceImplTest {
     private TestServiceImpl testService;
     private QuestionDao questionDao;
