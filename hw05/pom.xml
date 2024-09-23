@@ -12,7 +12,7 @@
     <groupId>ru.otus.hw</groupId>
     <artifactId>hw05-jdbc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-jdbc-demo</name>
+    <name>hw05-spring-jdbc</name>
 
     <properties>
         <java.version>17</java.version>
@@ -21,6 +21,8 @@
         <spring.shell.version>3.2.4</spring.shell.version>
         <checkstyle-plugin.version>3.3.1</checkstyle-plugin.version>
         <checkstyle.version>10.15.0</checkstyle.version>
+        <luquibase.version>4.29.2</luquibase.version>
+        <snakeyaml.version>2.3</snakeyaml.version>
         <checkstyle.config.url>
             https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml
         </checkstyle.config.url>
@@ -54,6 +56,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
         </dependency>
     </dependencies>
 
