@@ -102,7 +102,7 @@ class JdbcBookRepositoryTest {
     void shouldDeleteBook() {
         assertThat(repositoryJdbc.findById(1L)).isPresent();
         repositoryJdbc.deleteById(1L);
-        assertThat(repositoryJdbc.findById(1L)).isEmpty();
+        assertThrows(EntityNotFoundException.class, () -> repositoryJdbc.findById(1L));
     }
 
     private static List<Author> getDbAuthors() {
