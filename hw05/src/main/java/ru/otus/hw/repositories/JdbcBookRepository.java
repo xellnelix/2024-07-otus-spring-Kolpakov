@@ -37,7 +37,7 @@ public class JdbcBookRepository implements BookRepository {
                     new BookRowMapper())
             );
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new EntityNotFoundException("Book with id = " + id + " has not found");
         }
     }
 

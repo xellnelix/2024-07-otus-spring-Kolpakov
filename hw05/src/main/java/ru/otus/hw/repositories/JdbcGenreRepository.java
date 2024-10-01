@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
@@ -37,7 +38,7 @@ public class JdbcGenreRepository implements GenreRepository {
                     new GenreRowMapper())
             );
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new EntityNotFoundException("Genre with id = " + id + " has not found");
         }
     }
 
