@@ -17,10 +17,6 @@ import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.JpaAuthorRepository;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
-import ru.otus.hw.repositories.JpaGenreRepository;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -29,14 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Сервис для работы с комментариями")
 @DataJpaTest
-@Import({CommentServiceImpl.class,
-        JpaCommentRepository.class,
-        JpaBookRepository.class,
+@Import(value = {CommentServiceImpl.class,
         CommentConverter.class,
         BookServiceImpl.class,
-        JpaAuthorRepository.class,
-        JpaGenreRepository.class,
-        JpaBookRepository.class,
         BookConverter.class,
         AuthorConverter.class,
         GenreConverter.class})
