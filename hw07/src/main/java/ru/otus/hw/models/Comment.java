@@ -33,4 +33,9 @@ public class Comment {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Book book;
+
+    public Comment(String text, Book book) {
+        this.text = text;
+        this.book = book;
+    }
 }

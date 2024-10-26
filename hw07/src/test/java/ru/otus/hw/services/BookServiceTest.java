@@ -63,7 +63,7 @@ public class BookServiceTest {
 
     @Test
     @DisplayName("должен сохранять новую книгу")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveNewBook() {
         var expectedBook = new Book(4, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
         var actualBook = bookService.insert("BookTitle_10500", 1, 1);
@@ -72,7 +72,7 @@ public class BookServiceTest {
 
     @Test
     @DisplayName("должен сохранять измененную книгу")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateBook() {
         var bookBeforeUpdate = bookService.findById(1);
         var updatedBook = bookService.update(1, "Updated", 1, 1);
@@ -84,7 +84,7 @@ public class BookServiceTest {
 
     @Test
     @DisplayName("должен удалять книгу по id")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteBook() {
         bookService.deleteById(1);
         assertThat(bookService.findById(1)).isEmpty();
