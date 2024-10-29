@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-10-10--1--1
+      author: xellnelix
+      context: test
+      runOnChange: true
+      loadData:
+        primaryKey: id
+        file: csv/insert_comments.csv
+        relativeToChangelogFile: true
+        separator: ;
+        encoding: UTF-8
+        tableName: comments
