@@ -1,9 +1,11 @@
 package ru.otus.hw.services;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,9 +22,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Сервис для работы с книгами")
-@DataJpaTest
+@DataMongoTest
 @Import({BookServiceImpl.class,
         BookConverter.class,
         AuthorConverter.class,
@@ -48,7 +51,7 @@ public class BookServiceTest {
     @Test
     @DisplayName("должен загружать книгу по id")
     void shouldReturnCorrectBookById() {
-        var actualBook = bookService.findById(2);
+        var actualBook = bookService.findById("2");
         assertThat(actualBook).isPresent()
                 .get()
                 .isEqualTo(dbBooks.get(1));
@@ -65,20 +68,23 @@ public class BookServiceTest {
     @DisplayName("должен сохранять новую книгу")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveNewBook() {
-        var expectedBook = new Book(4, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
-        var actualBook = bookService.insert("BookTitle_10500", 1, 1);
-        assertThat(actualBook).isEqualTo(expectedBook);
+        var expectedBook = new Book("BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
+        var actualBook = bookService.insert("BookTitle_10500", "1", "1");
+        assertThat(actualBook.getTitle()).isEqualTo(expectedBook.getTitle());
+        assertThat(actualBook.getAuthor()).isEqualTo(expectedBook.getAuthor());
+        assertThat(actualBook.getGenre()).isEqualTo(expectedBook.getGenre());
+        assertNotNull(actualBook.getId());
     }
 
     @Test
     @DisplayName("должен сохранять измененную книгу")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateBook() {
-        var bookBeforeUpdate = bookService.findById(1);
-        var updatedBook = bookService.update(1, "Updated", 1, 1);
+        var bookBeforeUpdate = bookService.findById("1");
+        var updatedBook = bookService.update("1", "Updated", "1", "1");
         assertThat(updatedBook).isNotEqualTo(bookBeforeUpdate);
 
-        var bookAfterUpdate = bookService.findById(1);
+        var bookAfterUpdate = bookService.findById("1");
         assertThat(bookAfterUpdate).isPresent().get().isEqualTo(updatedBook);
     }
 
@@ -86,26 +92,26 @@ public class BookServiceTest {
     @DisplayName("должен удалять книгу по id")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteBook() {
-        bookService.deleteById(1);
-        assertThat(bookService.findById(1)).isEmpty();
+        bookService.deleteById("1");
+        assertThat(bookService.findById("1")).isEmpty();
     }
 
 
     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
+                .map(id -> new Author(id.toString(), "Author_" + id))
                 .toList();
     }
 
     private static List<Genre> getDbGenres() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
+                .map(id -> new Genre(id.toString(), "Genre_" + id))
                 .toList();
     }
 
     private static List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Book(id, "BookTitle_" + id, dbAuthors.get(id - 1), dbGenres.get(id - 1)))
+                .map(id -> new Book(id.toString(), "BookTitle_" + id, dbAuthors.get(id - 1), dbGenres.get(id - 1)))
                 .toList();
     }
 

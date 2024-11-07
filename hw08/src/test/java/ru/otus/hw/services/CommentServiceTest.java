@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
@@ -22,9 +23,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Сервис для работы с комментариями")
-@DataJpaTest
+@DataMongoTest
 @Import(value = {CommentServiceImpl.class,
         CommentConverter.class,
         BookServiceImpl.class,
@@ -52,8 +54,8 @@ public class CommentServiceTest {
     @Test
     @DisplayName("должен загружать комментарий по id")
     void shouldReturnCorrectCommentById() {
-        var expectedComment = new Comment(1, "Comment_1", dbBooks.get(0));
-        var actualComment = commentService.findById(1);
+        var expectedComment = new Comment("1", "CommentText_1", dbBooks.get(0));
+        var actualComment = commentService.findById("1");
         assertThat(actualComment).isPresent().get().isEqualTo(expectedComment);
     }
 
@@ -61,10 +63,10 @@ public class CommentServiceTest {
     @DisplayName("должен загружать коментарии по id книги")
     void shouldReturnCorrectCommentList() {
         var expectedComments = List.of(
-                new Comment(2, "Comment_2", dbBooks.get(1)),
-                new Comment(3, "Comment_3", dbBooks.get(1))
+                new Comment("2", "CommentText_2", dbBooks.get(1)),
+                new Comment("3", "CommentText_3", dbBooks.get(1))
         );
-        var actualComments = commentService.findByBookId(2);
+        var actualComments = commentService.findByBookId("2");
         assertThat(actualComments).isEqualTo(expectedComments);
     }
 
@@ -72,20 +74,22 @@ public class CommentServiceTest {
     @DisplayName("должен сохранять новый комментарий")
     @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     void shouldSaveNewComment() {
-        var expectedComment = new Comment(4, "Comment_4", dbBooks.get(2));
-        var actualComment = commentService.insert("Comment_4", 3);
-        assertThat(actualComment).isEqualTo(expectedComment);
+        var expectedComment = new Comment("CommentText_4", dbBooks.get(2));
+        var actualComment = commentService.insert("CommentText_4", "3");
+        assertThat(actualComment.getText()).isEqualTo(expectedComment.getText());
+        assertThat(actualComment.getBook()).isEqualTo(expectedComment.getBook());
+        assertNotNull(actualComment.getId());
     }
 
     @Test
     @DisplayName("должен сохранять измененный комментарий")
     @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     void shouldSaveUpdatedComment() {
-        var commentBeforeUpdate = commentService.findById(1);
-        var updatedComment = commentService.update(1, "UpdatedComment_1", 1);
+        var commentBeforeUpdate = commentService.findById("1");
+        var updatedComment = commentService.update("1", "UpdatedCommentText_1", "1");
         assertThat(commentBeforeUpdate).isNotEqualTo(updatedComment);
 
-        var commentAfterUpdate = commentService.findById(1);
+        var commentAfterUpdate = commentService.findById("1");
         assertThat(commentAfterUpdate).isPresent().get().isEqualTo(updatedComment);
     }
 
@@ -93,26 +97,26 @@ public class CommentServiceTest {
     @DisplayName("должен удалять комментарий по id")
     @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     void shouldDeleteComment() {
-        commentService.deleteById(1);
-        assertThat(commentService.findById(1).isEmpty());
+        commentService.deleteById("1");
+        assertThat(commentService.findById("1").isEmpty());
     }
 
 
     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
+                .map(id -> new Author(id.toString(), "Author_" + id))
                 .toList();
     }
 
     private static List<Genre> getDbGenres() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
+                .map(id -> new Genre(id.toString(), "Genre_" + id))
                 .toList();
     }
 
     private static List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Book(id, "BookTitle_" + id, dbAuthors.get(id - 1), dbGenres.get(id - 1)))
+                .map(id -> new Book(id.toString(), "BookTitle_" + id, dbAuthors.get(id - 1), dbGenres.get(id - 1)))
                 .toList();
     }
 
