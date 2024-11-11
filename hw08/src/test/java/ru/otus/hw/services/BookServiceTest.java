@@ -1,12 +1,10 @@
 package ru.otus.hw.services;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,10 +17,11 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Сервис для работы с книгами")
 @DataMongoTest
@@ -94,6 +93,12 @@ public class BookServiceTest {
     void shouldDeleteBook() {
         bookService.deleteById("1");
         assertThat(bookService.findById("1")).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Вернет empty Optional если указан несуществующий id книги")
+    void shouldReturnEmpty() {
+        assertEquals(Optional.empty(), bookService.findById("50"));
     }
 
 
