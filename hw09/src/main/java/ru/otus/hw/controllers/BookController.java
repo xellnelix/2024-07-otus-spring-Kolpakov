@@ -18,6 +18,11 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
+    @GetMapping("/")
+    public String redirect() {
+        return "redirect:/books";
+    }
+
     @GetMapping("/books")
     public String getBooks(Model model) {
         List<BookDto> books = bookService.findAll();
@@ -25,9 +30,15 @@ public class BookController {
         return "books";
     }
 
+    @GetMapping("/newbook")
+    public String createBookPage() {
+        return "create";
+    }
+
     @PostMapping("/newbook")
-    public void createBook(@RequestParam(value = "title") String title, @RequestParam(value = "authorId") long authorId, @RequestParam(value = "genreId") long genreId) {
-        bookService.insert(title, authorId, genreId);
+    public String createBook(@RequestParam(value = "title") String title, @RequestParam(value = "authorFullName") String authorFullName, @RequestParam(value = "genreName") String genreName) {
+        bookService.insert(title, authorFullName, genreName);
+        return "redirect:/books";
     }
 
     @GetMapping("/updatebook")
@@ -38,13 +49,14 @@ public class BookController {
     }
 
     @PostMapping("/updatebook")
-    public String updateBook(@RequestParam(value = "title") String title, @RequestParam(value = "authorId") long authorId, @RequestParam(value = "genreId") long genreId) {
-        bookService.insert(title, authorId, genreId);
+    public String updateBook(@RequestParam(value = "id") long id, @RequestParam(value = "title") String title, @RequestParam(value = "authorFullName") String authorFullName,@RequestParam(value = "genreName") String genreName) {
+        bookService.update(id, title, authorFullName, genreName);
         return "redirect:/books";
     }
 
-    @DeleteMapping("/deletebook")
-    public void deleteBook(@RequestParam(value = "id") long id) {
+    @GetMapping("/deletebook")
+    public String deleteBook(@RequestParam(value = "id") long id) {
         bookService.deleteById(id);
+        return "redirect:/books";
     }
 }

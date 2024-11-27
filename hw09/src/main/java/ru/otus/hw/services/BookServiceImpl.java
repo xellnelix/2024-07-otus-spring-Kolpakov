@@ -27,21 +27,21 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto insert(String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+    public BookDto insert(String title, String authorFullName, String genreName) {
+        var author = authorRepository.findByFullName(authorFullName)
+                .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found".formatted(authorFullName)));
+        var genre = genreRepository.findByName(genreName)
+                .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found".formatted(genreName)));
         var book = new Book(title, author, genre);
         return BookMapper.bookToBookDto(bookRepository.save(book));
     }
 
     @Override
-    public BookDto update(long id, String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+    public BookDto update(long id, String title, String authorFullName, String genreName) {
+        var author = authorRepository.findByFullName(authorFullName)
+                .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found".formatted(authorFullName)));
+        var genre = genreRepository.findByName(genreName)
+                .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found".formatted(genreName)));
         var book = new Book(id, title, author, genre);
         return BookMapper.bookToBookDto(bookRepository.save(book));
     }

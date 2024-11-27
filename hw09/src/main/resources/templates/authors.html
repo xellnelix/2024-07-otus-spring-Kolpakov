@@ -14,16 +14,17 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="author : ${authors}">
         <td th:text="${author.id}">1</td>
         <td th:text="${author.fullName}">John Doe</td>
-        <th>Edit</th>
     </tr>
     </tbody>
 </table>
+<div class="row">
+    <a href="books.html" th:href="@{/books}"><button type="button">Return</button></a>
+</div>
 </body>
 </html>

@@ -27,9 +27,15 @@
         <td th:text="${book.genre.name}">John Doe</td>
         <td>
             <a href="edit.html" th:href="@{/updatebook(id=${book.id})}">Edit</a>
+            <a href="books.html" th:href="@{/deletebook(id=${book.id})}">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
+<div class="row">
+    <a href="create.html" th:href="@{/newbook}"><button type="button">Create</button></a>
+    <a href="authors.html" th:href="@{/authors}"><button type="button">Authors</button></a>
+    <a href="genres.html" th:href="@{/genres}"><button type="button">Genres</button></a>
+</div>
 </body>
 </html>
