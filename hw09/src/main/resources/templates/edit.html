@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form id="edit-form" action="edit.html" th:method="post" th:action="@{/updatebook(id=${book.id})}">
+<form id="edit-form" action="edit.html" th:method="post" th:action="@{/books/edit/{id}(id=${book.id})}">
     <h3>Book Info:</h3>
 
     <div class="row">
@@ -22,7 +22,8 @@
 
     <div class="row">
         <label for="book-author-input">Author:</label>
-        <input id="book-author-input" name="authorFullName" type="text" value="Template Author" th:value="${book.author.fullName}"/>
+        <input id="book-author-input" name="authorFullName" type="text" value="Template Author"
+               th:value="${book.author.fullName}"/>
     </div>
 
     <div class="row">
@@ -32,7 +33,9 @@
 
     <div class="row">
         <button type="submit">Save</button>
-        <a href="books.html" th:href="@{/}"><button type="button">Cancel</button></a>
+        <a href="books.html" th:href="@{/}">
+            <button type="button">Cancel</button>
+        </a>
     </div>
 </form>
 

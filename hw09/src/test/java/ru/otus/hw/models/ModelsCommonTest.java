@@ -3,25 +3,25 @@ package ru.otus.hw.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import static java.util.Objects.isNull;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Objects.isNull;
-import static org.assertj.core.api.Assertions.assertThat;
-
+@DisplayName("Тесты сущностей")
 class ModelsCommonTest {
 
     private static Set<Class<?>> entitiesClasses;

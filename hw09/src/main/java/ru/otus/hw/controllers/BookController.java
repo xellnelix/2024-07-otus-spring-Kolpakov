@@ -1,17 +1,15 @@
 package ru.otus.hw.controllers;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.services.BookService;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,33 +28,47 @@ public class BookController {
         return "books";
     }
 
-    @GetMapping("/newbook")
+    @GetMapping("/books/{id}")
+    public String findBook(@PathVariable("id") long bookId, Model model) {
+        BookDto foundBook = bookService.findById(bookId);
+        model.addAttribute("book", foundBook);
+        return "foundbook";
+    }
+
+    @GetMapping("/books/new")
     public String createBookPage() {
         return "create";
     }
 
-    @PostMapping("/newbook")
-    public String createBook(@RequestParam(value = "title") String title, @RequestParam(value = "authorFullName") String authorFullName, @RequestParam(value = "genreName") String genreName) {
+    @PostMapping("/books/new")
+    public String createBook(@RequestParam(value = "title") String title,
+                             @RequestParam(value = "authorFullName") String authorFullName,
+                             @RequestParam(value = "genreName") String genreName
+    ) {
         bookService.insert(title, authorFullName, genreName);
         return "redirect:/books";
     }
 
-    @GetMapping("/updatebook")
-    public String updateBook(@RequestParam(value = "id") long id, Model model) {
-        BookDto foundedBook = bookService.findById(id);
+    @GetMapping("/books/edit/{id}")
+    public String updateBook(@PathVariable("id") long bookId, Model model) {
+        BookDto foundedBook = bookService.findById(bookId);
         model.addAttribute("book", foundedBook);
         return "edit";
     }
 
-    @PostMapping("/updatebook")
-    public String updateBook(@RequestParam(value = "id") long id, @RequestParam(value = "title") String title, @RequestParam(value = "authorFullName") String authorFullName,@RequestParam(value = "genreName") String genreName) {
-        bookService.update(id, title, authorFullName, genreName);
+    @PostMapping("/books/edit/{id}")
+    public String updateBook(@PathVariable("id") long bookId,
+                             @RequestParam(value = "title") String title,
+                             @RequestParam(value = "authorFullName") String authorFullName,
+                             @RequestParam(value = "genreName") String genreName
+    ) {
+        bookService.update(bookId, title, authorFullName, genreName);
         return "redirect:/books";
     }
 
-    @GetMapping("/deletebook")
-    public String deleteBook(@RequestParam(value = "id") long id) {
-        bookService.deleteById(id);
+    @PostMapping("/books/remove/{id}")
+    public String deleteBook(@PathVariable("id") long bookId) {
+        bookService.deleteById(bookId);
         return "redirect:/books";
     }
 }

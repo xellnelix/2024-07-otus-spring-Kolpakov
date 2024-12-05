@@ -1,18 +1,18 @@
 package ru.otus.hw.mappers;
 
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.models.Book;
-
-import static ru.otus.hw.mappers.AuthorMapper.authorToAuthorDto;
 import static ru.otus.hw.mappers.AuthorMapper.authorDtoToAuthor;
-import static ru.otus.hw.mappers.GenreMapper.genreToGenreDto;
+import static ru.otus.hw.mappers.AuthorMapper.authorToAuthorDto;
 import static ru.otus.hw.mappers.GenreMapper.genreDtoToGenre;
+import static ru.otus.hw.mappers.GenreMapper.genreToGenreDto;
+import ru.otus.hw.models.Book;
 
 public class BookMapper {
 
     public static BookDto bookToBookDto(Book book) {
-        if (book == null)
+        if (book == null) {
             return null;
+        }
 
         BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
@@ -23,8 +23,9 @@ public class BookMapper {
     }
 
     public static Book bookDtoToBook(BookDto bookDto) {
-        if (bookDto == null)
+        if (bookDto == null) {
             return null;
+        }
 
         Book book = new Book();
         book.setId(bookDto.getId());
