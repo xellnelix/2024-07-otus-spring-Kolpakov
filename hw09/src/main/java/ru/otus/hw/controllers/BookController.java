@@ -31,6 +31,10 @@ public class BookController {
     @GetMapping("/books/{id}")
     public String findBook(@PathVariable("id") long bookId, Model model) {
         BookDto foundBook = bookService.findById(bookId);
+
+        if (foundBook == null) {
+            return "error";
+        }
         model.addAttribute("book", foundBook);
         return "foundbook";
     }

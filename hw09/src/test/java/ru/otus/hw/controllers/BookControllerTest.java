@@ -12,9 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
@@ -53,6 +52,11 @@ public class BookControllerTest {
         BookDto expectedBook = new BookDto(1L, "BookTitle_1", dtoAuthors.get(0), dtoGenres.get(0));
         given(bookService.findById(1)).willReturn(expectedBook);
         this.mvc.perform(get("/books/1")).andExpect(status().isOk()).andExpect(model().attribute("book", expectedBook));
+    }
+
+    @Test
+    public void readBookByIdErrorTest() throws Exception {
+        this.mvc.perform(get("/books/20")).andExpect(status().isOk()).andExpect(view().name("error"));
     }
 
     @Test
