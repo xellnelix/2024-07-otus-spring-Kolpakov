@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-09-23--2--1
+      author: xellnelix
+      createTable:
+        tableName: genres
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_genre_id
+          - column:
+              name: name
+              type: varchar(255)
+  - changeSet:
+      id: 2024-09-23--2--2
+      author: xellnelix
+      changes:
+        - loadUpdateData:
+            columns:
+              - column:
+                  header: name
+                  name: name
+                  type: varchar(255)
+            encoding: UTF-8
+            file: csv/genres.csv
+            primaryKey: id
+            relativeToChangelogFile: true
+            separator: ;
+            tableName: genres

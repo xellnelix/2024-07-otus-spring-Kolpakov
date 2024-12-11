@@ -3,7 +3,7 @@ package ru.otus.hw.commands;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.mappers.CommentConverter;
 import ru.otus.hw.services.CommentService;
 
 import java.util.stream.Collectors;
