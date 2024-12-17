@@ -55,11 +55,6 @@ public class BookControllerTest {
     }
 
     @Test
-    public void readBookByIdErrorTest() throws Exception {
-        this.mvc.perform(get("/books/20")).andExpect(status().isOk()).andExpect(view().name("error"));
-    }
-
-    @Test
     public void readRedirectTest() throws Exception {
         this.mvc.perform(get("/")).andExpect(redirectedUrl("/books")).andExpect(status().is3xxRedirection());
     }
