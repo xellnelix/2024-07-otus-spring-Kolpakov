@@ -2,77 +2,54 @@ package ru.otus.hw.controllers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
-    @GetMapping("/")
-    public String redirect() {
-        return "redirect:/books";
-    }
-
     @GetMapping("/books")
-    public String getBooks(Model model) {
-        List<BookDto> books = bookService.findAll();
-        model.addAttribute("books", books);
-        return "books";
+    public List<BookDto> getBooks() {
+        return bookService.findAll();
     }
 
     @GetMapping("/books/{id}")
-    public String findBook(@PathVariable("id") long bookId, Model model) {
-        BookDto foundBook = bookService.findById(bookId);
-        model.addAttribute("book", foundBook);
-        return "foundbook";
+    public BookDto findBook(@PathVariable("id") long bookId) {
+        return bookService.findById(bookId);
     }
 
-    @GetMapping("/books/new")
-    public String createBookPage() {
-        return "create";
-    }
-
-    @PostMapping("/books/new")
-    public String createBook(@RequestParam(value = "title") String title,
-                             @RequestParam(value = "authorFullName") String authorFullName,
-                             @RequestParam(value = "genreName") String genreName
+    @PostMapping("/books")
+    public BookDto createBook(@RequestParam(value = "title") String title,
+                              @RequestParam(value = "authorFullName") String authorFullName,
+                              @RequestParam(value = "genreName") String genreName
     ) {
-        bookService.insert(title, authorFullName, genreName);
-        return "redirect:/books";
+        return bookService.insert(title, authorFullName, genreName);
     }
 
-    @GetMapping("/books/edit/{id}")
-    public String updateBook(@PathVariable("id") long bookId, Model model) {
-        BookDto foundedBook = bookService.findById(bookId);
-        model.addAttribute("book", foundedBook);
-        return "edit";
-    }
-
-    @PostMapping("/books/edit/{id}")
-    public String updateBook(@PathVariable("id") long bookId,
-                             @RequestParam(value = "title") String title,
-                             @RequestParam(value = "authorFullName") String authorFullName,
-                             @RequestParam(value = "genreName") String genreName
+    @PutMapping("/books/{id}")
+    public BookDto updateBook(@PathVariable("id") long bookId,
+                              @RequestParam(value = "title") String title,
+                              @RequestParam(value = "authorFullName") String authorFullName,
+                              @RequestParam(value = "genreName") String genreName
     ) {
-        bookService.update(bookId, title, authorFullName, genreName);
-        return "redirect:/books";
+        return bookService.update(bookId, title, authorFullName, genreName);
     }
 
-    @PostMapping("/books/remove/{id}")
-    public String deleteBook(@PathVariable("id") long bookId) {
+    @DeleteMapping("/books/{id}")
+    public void deleteBook(@PathVariable("id") long bookId) {
         bookService.deleteById(bookId);
-        return "redirect:/books";
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

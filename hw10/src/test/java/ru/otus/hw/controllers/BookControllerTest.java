@@ -1,5 +1,6 @@
 package ru.otus.hw.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import ru.otus.hw.dto.AuthorDto;
@@ -22,6 +25,9 @@ import ru.otus.hw.services.BookService;
 @DisplayName("Тесты контроллера для работы с книгами")
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Autowired
     private MockMvc mvc;
 
@@ -44,19 +50,14 @@ public class BookControllerTest {
     @Test
     public void readBookTest() throws Exception {
         given(bookService.findAll()).willReturn(dtoBooks);
-        this.mvc.perform(get("/books")).andExpect(status().isOk()).andExpect(model().attribute("books", dtoBooks));
+        this.mvc.perform(get("/books")).andExpect(status().isOk()).andExpect(content().contentType("application/json")).andExpect(content().json(objectMapper.writeValueAsString(dtoBooks)));
     }
 
     @Test
     public void readBookByIdTest() throws Exception {
         BookDto expectedBook = new BookDto(1L, "BookTitle_1", dtoAuthors.get(0), dtoGenres.get(0));
         given(bookService.findById(1)).willReturn(expectedBook);
-        this.mvc.perform(get("/books/1")).andExpect(status().isOk()).andExpect(model().attribute("book", expectedBook));
-    }
-
-    @Test
-    public void readRedirectTest() throws Exception {
-        this.mvc.perform(get("/")).andExpect(redirectedUrl("/books")).andExpect(status().is3xxRedirection());
+        this.mvc.perform(get("/books/1")).andExpect(status().isOk());
     }
 
     @Test
@@ -68,8 +69,8 @@ public class BookControllerTest {
     public void createBookTest() throws Exception {
         BookDto expectedBook = new BookDto(4L, "NewBookTest", dtoAuthors.get(0), dtoGenres.get(0));
         given(bookService.findById(4)).willReturn(expectedBook);
-        this.mvc.perform(post("/books/new").param("title", "NewBookTest").param("authorFullName", "Author_1").param("genreName", "Genre_1")).andExpect(status().is3xxRedirection());
-        this.mvc.perform(get("/books/4")).andExpect(status().isOk()).andExpect(model().attribute("book", expectedBook));
+        this.mvc.perform(post("/books").param("title", "NewBookTest").param("authorFullName", "Author_1").param("genreName", "Genre_1")).andExpect(status().isOk());
+        this.mvc.perform(get("/books/4")).andExpect(status().isOk()).andExpect(content().json(objectMapper.writeValueAsString(expectedBook)));
     }
 
     @Test
@@ -77,13 +78,14 @@ public class BookControllerTest {
         BookDto expectedBook = new BookDto(1L, "BookEdited", dtoAuthors.get(0), dtoGenres.get(0));
         given(bookService.update(1, "BookEdited", "Author_1", "Genre_1")).willReturn(expectedBook);
         given(bookService.findById(1)).willReturn(expectedBook);
-        this.mvc.perform(post("/books/edit/1").param("title", "BookEdited").param("authorFullName", "Author_1").param("genreName", "Genre_1")).andExpect(status().is3xxRedirection());
-        this.mvc.perform(get("/books/1")).andExpect(status().isOk()).andExpect(model().attribute("book", expectedBook));
+        this.mvc.perform(put("/books/1").param("title", "BookEdited").param("authorFullName", "Author_1").param("genreName", "Genre_1")).andExpect(status().isOk());
+        this.mvc.perform(get("/books/1")).andExpect(status().isOk()).andExpect(content().json(objectMapper.writeValueAsString(expectedBook)));
     }
 
     @Test
     public void deleteBookTest() throws Exception {
-        this.mvc.perform(post("/books/remove/1")).andExpect(status().is3xxRedirection());
+        this.mvc.perform(delete("/books/1")).andExpect(status().isOk());
+        this.mvc.perform(get("/books/1")).andExpect(jsonPath("$").doesNotExist());
     }
 
     private static List<AuthorDto> getDtoAuthors() {
