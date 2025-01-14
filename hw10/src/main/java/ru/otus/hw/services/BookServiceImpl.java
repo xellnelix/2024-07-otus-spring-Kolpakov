@@ -34,30 +34,30 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto insert(String title, String authorFullName, String genreName) {
-        var author = authorRepository.findByFullName(authorFullName)
+    public BookDto insert(Book book) {
+        var author = authorRepository.findByFullName(book.getAuthor().getFullName())
                 .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found"
-                        .formatted(authorFullName))
+                        .formatted(book.getAuthor().getFullName()))
                 );
-        var genre = genreRepository.findByName(genreName)
+        var genre = genreRepository.findByName(book.getGenre().getName())
                 .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found"
-                        .formatted(genreName))
+                        .formatted(book.getGenre().getName()))
                 );
-        var book = new Book(title, author, genre);
         return BookMapper.bookToBookDto(bookRepository.save(book));
     }
 
     @Transactional
     @Override
-    public BookDto update(long id, String title, String authorFullName, String genreName) {
-        var author = authorRepository.findByFullName(authorFullName)
+    public BookDto update(long id, Book book) {
+        var author = authorRepository.findByFullName(book.getAuthor().getFullName())
                 .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found"
-                        .formatted(authorFullName))
+                        .formatted(book.getAuthor().getFullName()))
                 );
-        var genre = genreRepository.findByName(genreName)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found".formatted(genreName)));
-        var book = new Book(id, title, author, genre);
-        return BookMapper.bookToBookDto(bookRepository.save(book));
+        var genre = genreRepository.findByName(book.getGenre().getName())
+                .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found"
+                        .formatted(book.getGenre().getName())));
+        var newBook = new Book(id, book.getTitle(), book.getAuthor(), book.getGenre());
+        return BookMapper.bookToBookDto(bookRepository.save(newBook));
     }
 
     @Transactional

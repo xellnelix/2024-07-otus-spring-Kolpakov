@@ -4,9 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,12 +17,10 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
 
 @DisplayName("Тесты сервиса для работы с книгами")
 @DataJpaTest
@@ -63,18 +59,18 @@ public class BookServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveNewBook() {
         var expectedBook = new BookDto(4L, "BookTitle_10500", dtoAuthors.get(0), dtoGenres.get(0));
-        var actualBook = bookService.insert("BookTitle_10500", "Author_1", "Genre_1");
+        var actualBook = bookService.insert(bookDtoToBook(expectedBook));
         assertThat(actualBook.getTitle()).isEqualTo(expectedBook.getTitle());
         assertThat(actualBook.getAuthor()).isEqualTo(expectedBook.getAuthor());
         assertThat(actualBook.getGenre()).isEqualTo(expectedBook.getGenre());
-        assertNotNull(actualBook.getId());
+        assertThat(actualBook.getId()).isEqualTo(expectedBook.getId());
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateBook() {
         var bookBeforeUpdate = bookService.findById(1L);
-        var updatedBook = bookService.update(1L, "Updated", "Author_1", "Genre_1");
+        var updatedBook = bookService.update(1L, new Book("Updated", new Author(1, "Author_1"), new Genre(1, "Genre_1")));
         assertThat(updatedBook).isNotEqualTo(bookBeforeUpdate);
 
         var bookAfterUpdate = bookService.findById(1L);

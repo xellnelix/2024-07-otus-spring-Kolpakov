@@ -1,19 +1,23 @@
 package ru.otus.hw.controllers;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
+
+import java.util.List;
+
+import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,20 +35,13 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public BookDto createBook(@RequestParam(value = "title") String title,
-                              @RequestParam(value = "authorFullName") String authorFullName,
-                              @RequestParam(value = "genreName") String genreName
-    ) {
-        return bookService.insert(title, authorFullName, genreName);
+    public BookDto createBook(@RequestBody BookDto book) {
+        return bookService.insert(bookDtoToBook(book));
     }
 
     @PutMapping("/books/{id}")
-    public BookDto updateBook(@PathVariable("id") long bookId,
-                              @RequestParam(value = "title") String title,
-                              @RequestParam(value = "authorFullName") String authorFullName,
-                              @RequestParam(value = "genreName") String genreName
-    ) {
-        return bookService.update(bookId, title, authorFullName, genreName);
+    public BookDto updateBook(@PathVariable("id") long bookId, @RequestBody BookDto book) {
+        return bookService.update(bookId, bookDtoToBook(book));
     }
 
     @DeleteMapping("/books/{id}")
@@ -53,7 +50,9 @@ public class BookController {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ModelAndView handleEntityNotFoundException(EntityNotFoundException e) {
-        return new ModelAndView("redirect:/error");
+    public ResponseEntity<EntityNotFoundException> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new EntityNotFoundException(e.getMessage()));
     }
 }
