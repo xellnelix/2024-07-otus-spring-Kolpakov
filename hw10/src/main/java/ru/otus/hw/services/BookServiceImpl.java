@@ -1,8 +1,10 @@
 package ru.otus.hw.services;
 
 import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dto.BookDto;
@@ -35,6 +37,9 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public BookDto insert(Book book) {
+        if (book.getAuthor() == null || book.getGenre() == null) {
+            throw new EntityNotFoundException("Author or genre in book has not been found");
+        }
         var author = authorRepository.findByFullName(book.getAuthor().getFullName())
                 .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found"
                         .formatted(book.getAuthor().getFullName()))
@@ -43,12 +48,17 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found"
                         .formatted(book.getGenre().getName()))
                 );
-        return BookMapper.bookToBookDto(bookRepository.save(book));
+
+        var newBook = new Book(book.getTitle(), author, genre);
+        return BookMapper.bookToBookDto(bookRepository.save(newBook));
     }
 
     @Transactional
     @Override
-    public BookDto update(long id, Book book) {
+    public BookDto update(Book book) {
+        if (book.getAuthor() == null || book.getGenre() == null) {
+            throw new EntityNotFoundException("Author or genre in book has not been found");
+        }
         var author = authorRepository.findByFullName(book.getAuthor().getFullName())
                 .orElseThrow(() -> new EntityNotFoundException("Author with name %s not found"
                         .formatted(book.getAuthor().getFullName()))
@@ -56,8 +66,8 @@ public class BookServiceImpl implements BookService {
         var genre = genreRepository.findByName(book.getGenre().getName())
                 .orElseThrow(() -> new EntityNotFoundException("Genre with name %s not found"
                         .formatted(book.getGenre().getName())));
-        var newBook = new Book(id, book.getTitle(), book.getAuthor(), book.getGenre());
-        return BookMapper.bookToBookDto(bookRepository.save(newBook));
+        var updatedBook = new Book(book.getId(), book.getTitle(), author, genre);
+        return BookMapper.bookToBookDto(bookRepository.save(updatedBook));
     }
 
     @Transactional

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
 
 @DisplayName("Тесты сервиса для работы с книгами")
@@ -70,7 +75,7 @@ public class BookServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateBook() {
         var bookBeforeUpdate = bookService.findById(1L);
-        var updatedBook = bookService.update(1L, new Book("Updated", new Author(1, "Author_1"), new Genre(1, "Genre_1")));
+        var updatedBook = bookService.update(new Book(1L, "Updated", new Author(1, "Author_1"), new Genre(1, "Genre_1")));
         assertThat(updatedBook).isNotEqualTo(bookBeforeUpdate);
 
         var bookAfterUpdate = bookService.findById(1L);
@@ -87,6 +92,14 @@ public class BookServiceTest {
     @Test
     void shouldReturnEmpty() {
         assertThat(bookService.findById(50L)).isNull();
+    }
+
+    @Test
+    void shouldThrowsEntityNotFoundException() {
+        var book = new Book(4L, "NewBook", new Author(4L, "Author_4"), new Genre(1L, "Genre_1"));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> bookService.insert(book));
+        assertNotNull(exception);
+        assertEquals("Author with name Author_4 not found", exception.getMessage());
     }
 
 

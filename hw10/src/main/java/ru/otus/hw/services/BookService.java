@@ -10,7 +10,7 @@ public interface BookService {
 
     BookDto insert(Book book);
 
-    BookDto update(long id, Book book);
+    BookDto update(Book book);
 
     void deleteById(long id);
 

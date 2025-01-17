@@ -40,8 +40,8 @@ public class BookController {
     }
 
     @PutMapping("/books/{id}")
-    public BookDto updateBook(@PathVariable("id") long bookId, @RequestBody BookDto book) {
-        return bookService.update(bookId, bookDtoToBook(book));
+    public BookDto updateBook(@RequestBody BookDto book) {
+        return bookService.update(bookDtoToBook(book));
     }
 
     @DeleteMapping("/books/{id}")
@@ -50,9 +50,7 @@ public class BookController {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<EntityNotFoundException> handleEntityNotFoundException(EntityNotFoundException e) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new EntityNotFoundException(e.getMessage()));
+    public ResponseEntity<String> handleEntityNotFoundException() {
+        return new ResponseEntity<>("Entity not found", HttpStatus.NOT_FOUND);
     }
 }

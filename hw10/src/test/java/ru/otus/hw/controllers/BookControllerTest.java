@@ -93,7 +93,7 @@ public class BookControllerTest {
     @Test
     public void updateBookTest() throws Exception {
         BookDto expectedBook = new BookDto(1L, "BookEdited", dtoAuthors.get(0), dtoGenres.get(0));
-        given(bookService.update(1, new Book("BookEdited", new Author(1, "Author_1"), new Genre(1, "Genre_1")))).willReturn(expectedBook);
+        given(bookService.update(new Book(1L,"BookEdited", new Author(1, "Author_1"), new Genre(1, "Genre_1")))).willReturn(expectedBook);
         given(bookService.findById(1)).willReturn(expectedBook);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ public class BookControllerTest {
     @Test
     public void entityNotFoundExceptionTest() throws Exception {
         BookDto badDataBook = new BookDto(1L, "BookEdited", new AuthorDto(5, "NotFoundAuthor"), dtoGenres.get(0));
-        given(bookService.update(1, bookDtoToBook(badDataBook))).willThrow(EntityNotFoundException.class);
+        given(bookService.update(bookDtoToBook(badDataBook))).willThrow(EntityNotFoundException.class);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(badDataBook)))
