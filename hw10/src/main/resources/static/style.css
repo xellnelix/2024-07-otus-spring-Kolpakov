@@ -1,0 +1,72 @@
+body {
+    padding: 50px;
+     }
+
+.authors {
+    border: 1px solid steelblue;
+    width: 300px;
+    border-collapse: collapse;
+    }
+
+.authors tr td, th {
+    padding: 5px;
+    border: 1px solid steelblue;
+    }
+
+.authors td:last-child, td:first-child {
+    width: 50px;
+    }
+
+h3 {
+    background-image: url("listmark.png");
+    background-repeat: no-repeat;
+    padding: 2px;
+    padding-left: 30px;
+    }
+
+.books {
+    border: 1px solid steelblue;
+    width: 300px;
+    border-collapse: collapse;
+    }
+
+.books tr td, th {
+    padding: 5px;
+    border: 1px solid steelblue;
+    }
+
+.books td:last-child, td:first-child {
+    width: 50px;
+    }
+
+.genres {
+    border: 1px solid steelblue;
+    width: 300px;
+    border-collapse: collapse;
+    }
+
+.genres tr td, th {
+    padding: 5px;
+    border: 1px solid steelblue;
+    }
+
+.genres td:last-child, td:first-child {
+    width: 50px;
+    }
+
+label {
+   display: inline-block;
+   width: 100px;
+   }
+
+input:read-only {
+   background: lightgray;
+   }
+
+.row {
+    margin-top: 10px;
+     }
+
+.errors {
+    color: red;
+    }
