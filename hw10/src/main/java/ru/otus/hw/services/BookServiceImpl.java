@@ -14,6 +14,7 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
+import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +37,8 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto insert(Book book) {
+    public BookDto insert(BookDto bookDto) {
+        var book = bookDtoToBook(bookDto);
         if (book.getAuthor() == null || book.getGenre() == null) {
             throw new EntityNotFoundException("Author or genre in book has not been found");
         }
@@ -49,13 +51,13 @@ public class BookServiceImpl implements BookService {
                         .formatted(book.getGenre().getName()))
                 );
 
-        var newBook = new Book(book.getTitle(), author, genre);
-        return BookMapper.bookToBookDto(bookRepository.save(newBook));
+        return BookMapper.bookToBookDto(bookRepository.save(book));
     }
 
     @Transactional
     @Override
-    public BookDto update(Book book) {
+    public BookDto update(BookDto bookDto) {
+        var book = bookDtoToBook(bookDto);
         if (book.getAuthor() == null || book.getGenre() == null) {
             throw new EntityNotFoundException("Author or genre in book has not been found");
         }

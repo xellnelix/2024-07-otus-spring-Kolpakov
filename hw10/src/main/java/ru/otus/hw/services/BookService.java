@@ -3,14 +3,13 @@ package ru.otus.hw.services;
 
 import java.util.List;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.models.Book;
 
 public interface BookService {
     List<BookDto> findAll();
 
-    BookDto insert(Book book);
+    BookDto insert(BookDto book);
 
-    BookDto update(Book book);
+    BookDto update(BookDto book);
 
     void deleteById(long id);
 

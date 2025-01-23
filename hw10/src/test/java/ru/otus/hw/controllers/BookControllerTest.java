@@ -1,27 +1,17 @@
 package ru.otus.hw.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import static org.mockito.BDDMockito.given;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
-import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Genre;
-import ru.otus.hw.services.BookService;
-
-import java.util.List;
-import java.util.stream.IntStream;
-
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,7 +19,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
+import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.services.BookService;
 
 @DisplayName("Тесты контроллера для работы с книгами")
 @WebMvcTest(BookController.class)
@@ -93,7 +87,7 @@ public class BookControllerTest {
     @Test
     public void updateBookTest() throws Exception {
         BookDto expectedBook = new BookDto(1L, "BookEdited", dtoAuthors.get(0), dtoGenres.get(0));
-        given(bookService.update(new Book(1L,"BookEdited", new Author(1, "Author_1"), new Genre(1, "Genre_1")))).willReturn(expectedBook);
+        given(bookService.update(new BookDto(1L,"BookEdited", new AuthorDto(1, "Author_1"), new GenreDto(1, "Genre_1")))).willReturn(expectedBook);
         given(bookService.findById(1)).willReturn(expectedBook);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +107,7 @@ public class BookControllerTest {
     @Test
     public void entityNotFoundExceptionTest() throws Exception {
         BookDto badDataBook = new BookDto(1L, "BookEdited", new AuthorDto(5, "NotFoundAuthor"), dtoGenres.get(0));
-        given(bookService.update(bookDtoToBook(badDataBook))).willThrow(EntityNotFoundException.class);
+        given(bookService.update(badDataBook)).willThrow(EntityNotFoundException.class);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(badDataBook)))

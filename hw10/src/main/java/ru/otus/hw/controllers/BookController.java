@@ -1,5 +1,6 @@
 package ru.otus.hw.controllers;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
-
-import java.util.List;
-
-import static ru.otus.hw.mappers.BookMapper.bookDtoToBook;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,12 +33,12 @@ public class BookController {
 
     @PostMapping("/books")
     public BookDto createBook(@RequestBody BookDto book) {
-        return bookService.insert(bookDtoToBook(book));
+        return bookService.insert(book);
     }
 
     @PutMapping("/books/{id}")
     public BookDto updateBook(@RequestBody BookDto book) {
-        return bookService.update(bookDtoToBook(book));
+        return bookService.update(book);
     }
 
     @DeleteMapping("/books/{id}")

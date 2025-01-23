@@ -64,7 +64,7 @@ public class BookServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveNewBook() {
         var expectedBook = new BookDto(4L, "BookTitle_10500", dtoAuthors.get(0), dtoGenres.get(0));
-        var actualBook = bookService.insert(bookDtoToBook(expectedBook));
+        var actualBook = bookService.insert(expectedBook);
         assertThat(actualBook.getTitle()).isEqualTo(expectedBook.getTitle());
         assertThat(actualBook.getAuthor()).isEqualTo(expectedBook.getAuthor());
         assertThat(actualBook.getGenre()).isEqualTo(expectedBook.getGenre());
@@ -75,7 +75,7 @@ public class BookServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateBook() {
         var bookBeforeUpdate = bookService.findById(1L);
-        var updatedBook = bookService.update(new Book(1L, "Updated", new Author(1, "Author_1"), new Genre(1, "Genre_1")));
+        var updatedBook = bookService.update(new BookDto(1L, "Updated", new AuthorDto(1, "Author_1"), new GenreDto(1, "Genre_1")));
         assertThat(updatedBook).isNotEqualTo(bookBeforeUpdate);
 
         var bookAfterUpdate = bookService.findById(1L);
@@ -96,7 +96,7 @@ public class BookServiceTest {
 
     @Test
     void shouldThrowsEntityNotFoundException() {
-        var book = new Book(4L, "NewBook", new Author(4L, "Author_4"), new Genre(1L, "Genre_1"));
+        var book = new BookDto(4L, "NewBook", new AuthorDto(4L, "Author_4"), new GenreDto(1L, "Genre_1"));
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> bookService.insert(book));
         assertNotNull(exception);
         assertEquals("Author with name Author_4 not found", exception.getMessage());
