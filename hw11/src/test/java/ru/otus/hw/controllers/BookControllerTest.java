@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.mockito.BDDMockito.given;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import ru.otus.hw.services.BookService;
 
 @DisplayName("Тесты контроллера для работы с книгами")
 @WebMvcTest(BookController.class)
+@AutoConfigureDataMongo
 public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,8 +63,8 @@ public class BookControllerTest {
 
     @Test
     public void readBookByIdTest() throws Exception {
-        BookDto expectedBook = new BookDto(1L, "BookTitle_1", dtoAuthors.get(0), dtoGenres.get(0));
-        given(bookService.findById(1)).willReturn(expectedBook);
+        BookDto expectedBook = new BookDto("1", "BookTitle_1", dtoAuthors.get(0), dtoGenres.get(0));
+        given(bookService.findById("1")).willReturn(expectedBook);
         this.mvc.perform(get("/books/1")).andExpect(status().isOk());
     }
 
@@ -73,8 +75,8 @@ public class BookControllerTest {
 
     @Test
     public void createBookTest() throws Exception {
-        BookDto expectedBook = new BookDto(4L, "NewBookTest", dtoAuthors.get(0), dtoGenres.get(0));
-        given(bookService.findById(4)).willReturn(expectedBook);
+        BookDto expectedBook = new BookDto("4", "NewBookTest", dtoAuthors.get(0), dtoGenres.get(0));
+        given(bookService.findById("4")).willReturn(expectedBook);
         this.mvc.perform(post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedBook)))
@@ -86,9 +88,9 @@ public class BookControllerTest {
 
     @Test
     public void updateBookTest() throws Exception {
-        BookDto expectedBook = new BookDto(1L, "BookEdited", dtoAuthors.get(0), dtoGenres.get(0));
-        given(bookService.update(new BookDto(1L,"BookEdited", new AuthorDto(1, "Author_1"), new GenreDto(1, "Genre_1")))).willReturn(expectedBook);
-        given(bookService.findById(1)).willReturn(expectedBook);
+        BookDto expectedBook = new BookDto("1", "BookEdited", dtoAuthors.get(0), dtoGenres.get(0));
+        given(bookService.update(new BookDto("1","BookEdited", new AuthorDto("1", "Author_1"), new GenreDto("1", "Genre_1")))).willReturn(expectedBook);
+        given(bookService.findById("1")).willReturn(expectedBook);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedBook)))
@@ -106,7 +108,7 @@ public class BookControllerTest {
 
     @Test
     public void entityNotFoundExceptionTest() throws Exception {
-        BookDto badDataBook = new BookDto(1L, "BookEdited", new AuthorDto(5, "NotFoundAuthor"), dtoGenres.get(0));
+        BookDto badDataBook = new BookDto("1", "BookEdited", new AuthorDto("5", "NotFoundAuthor"), dtoGenres.get(0));
         given(bookService.update(badDataBook)).willThrow(EntityNotFoundException.class);
         this.mvc.perform(put("/books/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -116,19 +118,19 @@ public class BookControllerTest {
 
     private static List<AuthorDto> getDtoAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new AuthorDto(id, "Author_" + id))
+                .map(id -> new AuthorDto(id.toString(), "Author_" + id))
                 .toList();
     }
 
     private static List<GenreDto> getDtoGenres() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new GenreDto(id, "Genre_" + id))
+                .map(id -> new GenreDto(id.toString(), "Genre_" + id))
                 .toList();
     }
 
     private static List<BookDto> getDtoBooks(List<AuthorDto> AuthorDtos, List<GenreDto> GenreDtos) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new BookDto(id, "BookTitle_" + id, AuthorDtos.get(id - 1), GenreDtos.get(id - 1)))
+                .map(id -> new BookDto(id.toString(), "BookTitle_" + id, AuthorDtos.get(id - 1), GenreDtos.get(id - 1)))
                 .toList();
     }
 }

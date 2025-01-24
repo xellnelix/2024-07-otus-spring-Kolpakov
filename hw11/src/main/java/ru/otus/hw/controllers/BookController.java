@@ -27,7 +27,7 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}")
-    public BookDto findBook(@PathVariable("id") long bookId) {
+    public BookDto findBook(@PathVariable("id") String bookId) {
         return bookService.findById(bookId);
     }
 
@@ -42,7 +42,7 @@ public class BookController {
     }
 
     @DeleteMapping("/books/{id}")
-    public void deleteBook(@PathVariable("id") long bookId) {
+    public void deleteBook(@PathVariable("id") String bookId) {
         bookService.deleteById(bookId);
     }
 

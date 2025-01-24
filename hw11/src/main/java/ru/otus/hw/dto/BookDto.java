@@ -8,11 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class BookDto {
-    private long id;
+    private String id;
 
     private String title;
 
     private AuthorDto author;
 
     private GenreDto genre;
+
+    public BookDto(String title, AuthorDto author, GenreDto genre) {
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
 }

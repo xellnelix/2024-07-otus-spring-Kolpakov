@@ -1,12 +1,12 @@
 package ru.otus.hw.services;
 
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.mappers.BookMapper;
@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto findById(long id) {
+    public BookDto findById(String id) {
         return BookMapper.bookToBookDto(bookRepository.findById(id).orElse(null));
     }
 
@@ -74,7 +74,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 }
