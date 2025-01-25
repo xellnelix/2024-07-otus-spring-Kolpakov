@@ -1,4 +1,4 @@
-package ru.otus.hw.changelog;
+package ru.otus.hw.mongock.changelog;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
@@ -25,16 +25,16 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertAuthors", author = "xellnelix")
     public void insertAuthors(AuthorRepository authorRepository) {
-        authors.put("A1", authorRepository.save(new Author("Author_1")));
-        authors.put("A2", authorRepository.save(new Author("Author_2")));
-        authors.put("A3", authorRepository.save(new Author("Author_3")));
+        authors.put("A1", authorRepository.save(new Author("Author_1")).block());
+        authors.put("A2", authorRepository.save(new Author("Author_2")).block());
+        authors.put("A3", authorRepository.save(new Author("Author_3")).block());
     }
 
     @ChangeSet(order = "002", id = "insertGenres", author = "xellnelix")
     public void insertGenres(GenreRepository genreRepository) {
-        genres.put("G1", genreRepository.save(new Genre("Genre_1")));
-        genres.put("G2", genreRepository.save(new Genre("Genre_2")));
-        genres.put("G3", genreRepository.save(new Genre("Genre_3")));
+        genres.put("G1", genreRepository.save(new Genre("Genre_1")).block());
+        genres.put("G2", genreRepository.save(new Genre("Genre_2")).block());
+        genres.put("G3", genreRepository.save(new Genre("Genre_3")).block());
     }
 
     @ChangeSet(order = "003", id = "insertBooks", author = "xellnelix")

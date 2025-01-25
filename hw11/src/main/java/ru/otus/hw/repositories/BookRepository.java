@@ -1,16 +1,16 @@
 package ru.otus.hw.repositories;
 
-import java.util.List;
-import java.util.Optional;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Book;
 
 @Repository
-public interface BookRepository extends MongoRepository<Book, Long> {
-    Optional<Book> findById(String id);
+public interface BookRepository extends ReactiveMongoRepository<Book, String> {
+    Mono<Book> findById(String id);
 
-    List<Book> findAll();
+    Flux<Book> findAll();
 
-    void deleteById(String id);
+    Mono<Void> deleteById(String id);
 }
