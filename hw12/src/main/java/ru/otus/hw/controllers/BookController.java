@@ -1,18 +1,16 @@
 package ru.otus.hw.controllers;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -73,10 +71,5 @@ public class BookController {
     public String deleteBook(@PathVariable("id") long bookId) {
         bookService.deleteById(bookId);
         return "redirect:/books";
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ModelAndView handleEntityNotFoundException(EntityNotFoundException e) {
-        return new ModelAndView("redirect:/error");
     }
 }
