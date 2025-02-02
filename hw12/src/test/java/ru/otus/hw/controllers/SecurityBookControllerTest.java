@@ -51,7 +51,7 @@ public class SecurityBookControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "user")
+    @WithMockUser(username = "user", roles = "USER")
     void accessForUserTest() throws Exception {
         when(bookService.findAll()).thenReturn(dtoBooks);
         when(bookService.findById(anyLong())).thenReturn(dtoBooks.get(0));
@@ -62,7 +62,7 @@ public class SecurityBookControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "user")
+    @WithMockUser(username = "user", roles = "USER")
     void accessDeniedForUserTest() throws Exception {
         mvc.perform(post("/books/new")
                         .param("title", "NewBookTest")
@@ -72,7 +72,7 @@ public class SecurityBookControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = "admin")
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void accessForAdmin() throws Exception {
         BookDto expectedBook = new BookDto(4L, "NewBookTest", dtoAuthors.get(0), dtoGenres.get(0));
         given(bookService.findById(4)).willReturn(expectedBook);
@@ -93,7 +93,7 @@ public class SecurityBookControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "test")
+    @WithMockUser(username = "test", roles = "test")
     public void unauthorizedAccessDeniedTest() throws Exception{
         when(bookService.findAll()).thenReturn(dtoBooks);
 

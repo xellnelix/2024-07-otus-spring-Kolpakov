@@ -28,8 +28,8 @@ public class SecurityConfiguration {
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers(HttpMethod.POST).hasAuthority("admin")
-                        .requestMatchers(HttpMethod.GET).hasAnyAuthority("user", "admin")
+                        .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET).hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
         return http.build();
