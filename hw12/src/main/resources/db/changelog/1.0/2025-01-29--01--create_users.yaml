@@ -37,7 +37,7 @@ databaseChangeLog:
                   value: '$2a$12$a1FU0d4uR8A4QpR8.xlCoOKqxZE.pd8oPcPNitV/KpU328BQ0.5nW'
               - column:
                   name: role
-                  value: 'ROLE_ADMIN'
+                  value: 'ADMIN'
         - insert:
             tableName: users
             columns:
@@ -49,4 +49,4 @@ databaseChangeLog:
                   value: '$2a$12$XzVDhbCPxUp8v.9cPKb8QuQDg2uuYIp2RF4bWU4XJwXqYZYIHwQdS'
               - column:
                   name: role
-                  value: 'ROLE_USER'
+                  value: 'USER'
