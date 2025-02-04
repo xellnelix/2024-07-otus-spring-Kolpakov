@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -22,16 +25,19 @@ public class BookServiceImpl implements BookService {
 
     private final GenreRepository genreRepository;
 
+    @PostFilter("hasPermission(filterObject, 'READ')")
     @Override
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(BookMapper::bookToBookDto).collect(Collectors.toList());
     }
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     @Override
     public BookDto findById(long id) {
         return BookMapper.bookToBookDto(bookRepository.findById(id).orElse(null));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @Override
     public BookDto insert(String title, String authorFullName, String genreName) {
@@ -47,6 +53,7 @@ public class BookServiceImpl implements BookService {
         return BookMapper.bookToBookDto(bookRepository.save(book));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @Override
     public BookDto update(long id, String title, String authorFullName, String genreName) {
@@ -60,6 +67,7 @@ public class BookServiceImpl implements BookService {
         return BookMapper.bookToBookDto(bookRepository.save(book));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @Override
     public void deleteById(long id) {
