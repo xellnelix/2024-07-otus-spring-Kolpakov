@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+<h3>Error</h3>
+<p th:text="${errorMessage}">ASdf</p>
+<div class="row">
+    <a href="books.html" th:href="@{/books}">
+        <button type="button">Return</button>
+    </a>
+</div>
+</body>
+</html>
