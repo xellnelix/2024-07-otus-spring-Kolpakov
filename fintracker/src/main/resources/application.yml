@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance
+    username: fintracker
+    password: fintracker
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: public
+    liquibase-schema: public
+    parameters:
+      schema: data
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    root: info
+    org.springframework.test.context: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.jdbc.datasource: DEBUG
+    org.testcontainers: DEBUG
