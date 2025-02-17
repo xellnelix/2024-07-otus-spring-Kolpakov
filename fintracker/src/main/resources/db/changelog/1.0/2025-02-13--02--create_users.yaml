@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-02-13--2--1
+      author: xellnelix
+      createSequence:
+        schemaName: data
+        sequenceName: users_seq_id
+  - changeSet:
+      id: 2025-02-13--2--2
+      author: xellnelix
+      changes:
+        - sql:
+            sql: "CREATE TYPE data.role AS ENUM ('ROLE_ADMIN', 'ROLE_USER')"
+            rollback:
+              sql: "DROP TYPE data.role"
+  - changeSet:
+      id: 2025-02-13--2--3
+      author: xellnelix
+      createTable:
+        schemaName: data
+        tableName: users
+        columns:
+          - column:
+              name: id
+              type: bigint
+              defaultValueComputed: "nextval('data.users_seq_id')"
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_user_id
+          - column:
+              name: login
+              type: varchar(255)
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: user_login_unique
+          - column:
+              name: password
+              type: varchar
+          - column:
+              name: role
+              type: data.role

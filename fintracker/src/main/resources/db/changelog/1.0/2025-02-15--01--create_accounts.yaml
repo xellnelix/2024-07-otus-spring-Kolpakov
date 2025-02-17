@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-02-15--1--1
+      author: xellnelix
+      createSequence:
+        schemaName: data
+        sequenceName: accounts_seq_id
+  - changeSet:
+      id: 2025-02-15--1--2
+      author: xellnelix
+      createTable:
+        schemaName: data
+        tableName: accounts
+        columns:
+          - column:
+              name: id
+              type: bigint
+              defaultValueComputed: "nextval('data.accounts_seq_id')"
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_account_id
+          - column:
+              name: user_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: accounts_user_id_fk
+                referencedTableSchemaName: data
+                referencedTableName: users
+                referencedColumnNames: id
+                deleteCascade: true
+          - column:
+              name: name
+              type: varchar(128)
+              constraints:
+                nullable: false
+          - column:
+              name: balance
+              type: numeric(12,2)
+              defaultValueNumeric: 0.00
+              constraints:
+                nullable: false
+          - column:
+              name: date
+              type: timestamp

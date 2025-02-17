@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-02-13--1--1
+      author: xellnelix
+      createSequence:
+        schemaName: data
+        sequenceName: categories_seq_id
+  - changeSet:
+      id: 2025-02-13--1--2
+      author: xellnelix
+      createTable:
+        schemaName: data
+        tableName: categories
+        columns:
+          - column:
+              name: id
+              type: bigint
+              defaultValueComputed: "nextval('data.categories_seq_id')"
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_category_id
+          - column:
+              name: name
+              type: varchar(255)
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: category_name_unique
